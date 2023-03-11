@@ -1,10 +1,9 @@
 from pyspark import SparkContext
 
 
-
-    #this function takes a sparcontext and a lyrics file and return an rdd with the fomrat sonid,word1, word2, word3...
+    #this function takes a sparcontext and a lyrics file and return an rdd with the format sonid,word1, word2, word3...
 def parse_lyricsfile(sc, filepath:str):
-    rdd = sc.textFile("./mxm_dataset_train.txt").map(lambda line: line.split(','))
+    rdd = sc.textFile("filepath").map(lambda line: line.split(','))
 
     rdd = rdd.map(lambda line: (line[0], {int(x.split(':')[0]): int(x.split(':')[1]) for x in line[2:]}))
 
@@ -20,24 +19,20 @@ def parse_lyricsfile(sc, filepath:str):
 #this function takes a sparcontext and a genera file and return an rdd with the format songid,generaid
 #the generas are map to an int based on the number of diffrent generas in the file
 def parcs_generafile(sc,filepath):
-    rdd = sc.textFile("msd_tagtraum_cd2c.txt").map(lambda line: line.split("\t"))
+    rdd = sc.textFile("filpath").map(lambda line: line.split("\t"))
 
     generaindexes= rdd.map(lambda x: x[1]).distinct().zipWithIndex()
     rdd= rdd.map(lambda x: (x[1], x[0])).join(generaindexes).map(lambda x: [x[1][0], x[1][1]])
 
     return rdd
 
-
 #this function takes a sparcontext  a lyrcis rdd and agenera rdd and return an rdd with the format [id,generaid,word1,word2,word3...]
 def generate_combinedrdd(sc,lyricsrdd,generardd):
-    print("im here")
     rdd = lyricsrdd.join(generardd)
     rdd= rdd.map(lambda x: [x[0], x[1][1]]+ list(x[1][0]))
 
 
     return rdd
 
-sc = SparkContext("local", "Text to RDD Example")
-print(generate_combinedrdd(sc,parse_lyricsfile(sc,"sss"),parcs_generafile(sc,"")).take(1))
 
 
