@@ -29,8 +29,7 @@ else
 fi
 
 # Download and install Spark
-wget 
-https://dlcdn.apache.org/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz
+wget https://dlcdn.apache.org/spark/spark-3.3.2/spark-3.3.2-bin-hadoop3.tgz
 tar -xvf spark-3.3.2-bin-hadoop3.tgz
 sudo mv spark-3.3.2-bin-hadoop3/ /opt/spark
 
